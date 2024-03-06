@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Work Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        #taskInput {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        #addTaskBtn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #taskList {
+            list-style-type: none;
+            padding: 0;
+        }
+        .task-item {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .task-item button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .task-item button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Daily Work Tracker</h2>
+        <input type="text" id="taskInput" placeholder="Enter your task">
+        <button id="addTaskBtn">Add Task</button>
+        <ul id="taskList"></ul>
+    </div>
+
+    <script>
+        // Load tasks from localStorage
+        document.addEventListener('DOMContentLoaded', function () {
+            loadTasks();
+        });
+
+        // Function to load tasks from localStorage
+        function loadTasks() {
+            var tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            var taskList = document.getElementById('taskList');
+
+            taskList.innerHTML = '';
+            tasks.forEach(function(task, index) {
+                var li = document.createElement('li');
+                li.classList.add('task-item');
+                li.innerHTML = `
+                    <span>${task}</span>
+                    <button onclick="deleteTask(${index})">Delete</button>
+                `;
+                taskList.appendChild(li);
+            });
+        }
+
+        // Function to add a new task
+        document.getElementById('addTaskBtn').addEventListener('click', function () {
+            var taskInput = document.getElementById('taskInput');
+            var task = taskInput.value.trim();
+
+            if (task !== '') {
+                var tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+                tasks.push(task);
+                localStorage.setItem('tasks', JSON.stringify(tasks));
+                taskInput.value = '';
+                loadTasks();
+            }
+        });
+
+        // Function to delete a task
+        function deleteTask(index) {
+            var tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+            tasks.splice(index, 1);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            loadTasks();
+        }
+    </script>
+</body>
+</html>
